@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src https://cdn.dsmcdn.com; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>Ürün Kataloğu</title>
+<style>
+  :root {
+    --zemin: #f6f5f2;
+    --yuzey: #ffffff;
+    --metin: #1d1d1f;
+    --soluk: #6b6b70;
+    --cizgi: #e4e2dc;
+    --vurgu: #1f5c4a;
+    --stokta-zemin: #e3f2ea;
+    --stokta-metin: #17603f;
+    --tukendi-zemin: #ececec;
+    --tukendi-metin: #5f5f5f;
+    --golge: 0 1px 2px rgba(0,0,0,.05), 0 4px 14px rgba(0,0,0,.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --zemin: #141416;
+      --yuzey: #1e1e21;
+      --metin: #ececee;
+      --soluk: #9a9aa2;
+      --cizgi: #2e2e33;
+      --vurgu: #7fd1b0;
+      --stokta-zemin: #173a2b;
+      --stokta-metin: #8fe0bb;
+      --tukendi-zemin: #2c2c30;
+      --tukendi-metin: #a3a3a8;
+      --golge: none;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--zemin);
+    color: var(--metin);
+    font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .kap { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
+
+  header { padding: 28px 0 8px; }
+  h1 { margin: 0; font-size: 26px; letter-spacing: -.01em; }
+  .alt { margin: 4px 0 0; color: var(--soluk); }
+
+  .arac {
+    position: sticky; top: 0; z-index: 5;
+    background: var(--zemin);
+    padding: 12px 0 10px;
+    border-bottom: 1px solid var(--cizgi);
+  }
+  .ara {
+    width: 100%; padding: 11px 14px; font-size: 16px;
+    border: 1px solid var(--cizgi); border-radius: 10px;
+    background: var(--yuzey); color: var(--metin);
+  }
+  .ara:focus { outline: 2px solid var(--vurgu); outline-offset: 1px; }
+  .cipler {
+    display: flex; gap: 8px; margin-top: 10px;
+    overflow-x: auto; scrollbar-width: none; padding-bottom: 2px;
+  }
+  .cipler::-webkit-scrollbar { display: none; }
+  .cip {
+    flex: none; padding: 6px 12px; border-radius: 999px;
+    border: 1px solid var(--cizgi); background: var(--yuzey); color: var(--metin);
+    font: inherit; font-size: 13px; cursor: pointer; white-space: nowrap;
+  }
+  .cip[aria-pressed="true"] { background: var(--vurgu); border-color: var(--vurgu); color: var(--yuzey); }
+  .sayac { margin: 14px 0 10px; color: var(--soluk); font-size: 13px; }
+
+  .izgara {
+    display: grid; gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    padding-bottom: 32px;
+  }
+  @media (max-width: 480px) {
+    .izgara { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  }
+  .kart {
+    background: var(--yuzey); border: 1px solid var(--cizgi); border-radius: 12px;
+    overflow: hidden; box-shadow: var(--golge);
+    display: flex; flex-direction: column;
+  }
+  .foto {
+    display: block; width: 100%; aspect-ratio: 3 / 4; padding: 0; border: 0;
+    background: var(--cizgi); cursor: zoom-in; position: relative;
+  }
+  .foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .foto .yok { position: absolute; inset: 0; display: grid; place-items: center; color: var(--soluk); font-size: 13px; }
+  .kart.tukendi .foto img { filter: grayscale(1); opacity: .55; }
+  .govde { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .ad { margin: 0; font-size: 14px; font-weight: 600; line-height: 1.3; }
+  .alt-satir { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: auto; flex-wrap: wrap; }
+  .kod {
+    font: 12px/1.2 ui-monospace, SFMono-Regular, Consolas, monospace; color: var(--soluk);
+    background: none; border: 0; padding: 4px 0; cursor: copy; text-align: left; word-break: break-all;
+  }
+  .kod:hover { color: var(--metin); }
+  .rozet { font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+  .rozet.stokta { background: var(--stokta-zemin); color: var(--stokta-metin); }
+  .rozet.tukendi { background: var(--tukendi-zemin); color: var(--tukendi-metin); }
+
+  .bos { text-align: center; color: var(--soluk); padding: 60px 0; }
+  footer { border-top: 1px solid var(--cizgi); color: var(--soluk); font-size: 12px; padding: 16px 0 28px; }
+
+  .bildirim {
+    position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%) translateY(20px);
+    background: var(--metin); color: var(--zemin); padding: 9px 16px; border-radius: 999px;
+    font-size: 13px; opacity: 0; transition: .2s; pointer-events: none;
+  }
+  .bildirim.acik { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  dialog.buyuk {
+    border: 0; padding: 0; background: transparent; max-width: min(92vw, 720px);
+  }
+  dialog.buyuk::backdrop { background: rgba(0,0,0,.8); }
+  dialog.buyuk img { width: 100%; max-height: 82vh; object-fit: contain; display: block; border-radius: 10px; }
+  dialog.buyuk p { color: #fff; text-align: center; margin: 10px 0 0; font-size: 14px; }
+  .kapat {
+    position: fixed; top: 14px; right: 14px; width: 40px; height: 40px; border-radius: 50%;
+    border: 0; background: rgba(255,255,255,.15); color: #fff; font-size: 22px; cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<header class="kap">
+  <h1 id="baslik"></h1>
+  <p class="alt" id="altBaslik" hidden></p>
+</header>
+
+<div class="arac">
+  <div class="kap">
+    <input class="ara" id="ara" type="search" placeholder="Ürün adı veya kod ara" aria-label="Ürün ara" autocomplete="off">
+    <div class="cipler" id="cipler" role="toolbar" aria-label="Filtreler"></div>
+  </div>
+</div>
+
+<main class="kap">
+  <p class="sayac" id="sayac" aria-live="polite"></p>
+  <div class="izgara" id="izgara"></div>
+  <p class="bos" id="bos" hidden>Aramanıza uygun ürün bulunamadı.</p>
+</main>
+
+<footer class="kap" id="altbilgi"></footer>
+<div class="bildirim" id="bildirim" role="status"></div>
+
+<dialog class="buyuk" id="buyuk">
+  <button class="kapat" id="kapat" aria-label="Kapat">×</button>
+  <img id="buyukImg" alt="">
+  <p id="buyukAd"></p>
+</dialog>
+
+<script>
+const KATALOG = {"baslik": "Ürün Kataloğu", "altBaslik": "", "guncelleme": "2026-10-16T12:53", "urunler": []} || { baslik: "Ürün Kataloğu", altBaslik: "", guncelleme: "", urunler: [] };
+
+const durum = { metin: "", stok: "hepsi", kategori: "" };
+const $ = id => document.getElementById(id);
+
+function norm(s) {
+  return String(s || "").toLocaleLowerCase("tr")
+    .replace(/ı/g, "i").replace(/ğ/g, "g").replace(/ü/g, "u")
+    .replace(/ş/g, "s").replace(/ö/g, "o").replace(/ç/g, "c");
+}
+function guvenliGorsel(u) {
+  return typeof u === "string" && u.startsWith("https://") ? u : "";
+}
+function tarihYaz(iso) {
+  const t = new Date(iso);
+  if (isNaN(t)) return "";
+  return t.toLocaleDateString("tr-TR") + " " + t.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
+}
+
+const urunler = KATALOG.urunler.slice().sort((a, b) => (b.sira || 0) - (a.sira || 0));   // en son eklenen üstte
+urunler.forEach(u => { u._ara = norm(u.ad + " " + u.kod); });
+
+function el(etiket, sinif, metin) {
+  const e = document.createElement(etiket);
+  if (sinif) e.className = sinif;
+  if (metin != null) e.textContent = metin;
+  return e;
+}
+
+function cipleriKur() {
+  const kutu = $("cipler");
+  const ekle = (etiket, tik, aktif) => {
+    const b = el("button", "cip", etiket);
+    b.type = "button";
+    b.setAttribute("aria-pressed", aktif ? "true" : "false");
+    b.addEventListener("click", tik);
+    kutu.appendChild(b);
+    return b;
+  };
+  const stokCip = ekle("Yalnız stokta olanlar", () => {
+    durum.stok = durum.stok === "stokta" ? "hepsi" : "stokta";
+    stokCip.setAttribute("aria-pressed", durum.stok === "stokta" ? "true" : "false");
+    ciz();
+  }, false);
+
+  const kategoriler = [...new Set(urunler.map(u => u.ad))].sort((a, b) => a.localeCompare(b, "tr"));
+  if (kategoriler.length < 2) return;
+  const katCipleri = [];
+  const tumu = ekle("Tümü", () => secKategori("", tumu), true);
+  katCipleri.push(tumu);
+  kategoriler.forEach(k => {
+    const c = ekle(k, () => secKategori(k, c), false);
+    katCipleri.push(c);
+  });
+  function secKategori(k, cip) {
+    durum.kategori = k;
+    katCipleri.forEach(x => x.setAttribute("aria-pressed", x === cip ? "true" : "false"));
+    ciz();
+  }
+}
+
+function kartYap(u) {
+  const kart = el("article", "kart" + (u.stokta ? "" : " tukendi"));
+  const foto = el("button", "foto");
+  foto.type = "button";
+  foto.setAttribute("aria-label", u.ad + " görselini büyüt");
+  const src = guvenliGorsel(u.gorsel);
+  if (src) {
+    const img = el("img");
+    img.src = src;
+    img.alt = u.ad;
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.referrerPolicy = "no-referrer";
+    img.addEventListener("error", () => { img.remove(); foto.appendChild(el("span", "yok", "Görsel yok")); });
+    foto.appendChild(img);
+    foto.addEventListener("click", () => buyut(src, u));
+  } else {
+    foto.appendChild(el("span", "yok", "Görsel yok"));
+    foto.disabled = true;
+  }
+  kart.appendChild(foto);
+
+  const govde = el("div", "govde");
+  govde.appendChild(el("h2", "ad", u.ad));
+  const alt = el("div", "alt-satir");
+  const kod = el("button", "kod", u.kod);
+  kod.type = "button";
+  kod.title = "Kodu kopyala";
+  kod.addEventListener("click", () => kopyala(u.kod));
+  alt.appendChild(kod);
+  alt.appendChild(el("span", "rozet " + (u.stokta ? "stokta" : "tukendi"), u.stokta ? "Stokta" : "Tükendi"));
+  govde.appendChild(alt);
+  kart.appendChild(govde);
+  return kart;
+}
+
+function ciz() {
+  const aranan = norm(durum.metin.trim());
+  const gorunen = urunler.filter(u =>
+    (!aranan || u._ara.includes(aranan)) &&
+    (durum.stok !== "stokta" || u.stokta) &&
+    (!durum.kategori || u.ad === durum.kategori));
+  const izgara = $("izgara");
+  izgara.replaceChildren(...gorunen.map(kartYap));
+  const stokta = gorunen.filter(u => u.stokta).length;
+  $("sayac").textContent = gorunen.length + " ürün · " + stokta + " stokta";
+  $("bos").hidden = gorunen.length > 0 || urunler.length === 0;
+  if (urunler.length === 0) $("sayac").textContent = "Henüz ürün eklenmedi.";
+}
+
+function buyut(src, u) {
+  $("buyukImg").src = src;
+  $("buyukImg").alt = u.ad;
+  $("buyukAd").textContent = u.ad + " · " + u.kod;
+  $("buyuk").showModal();
+}
+$("kapat").addEventListener("click", () => $("buyuk").close());
+$("buyuk").addEventListener("click", e => { if (e.target === $("buyuk")) $("buyuk").close(); });
+
+let bildirimZaman;
+function bildir(m) {
+  const b = $("bildirim");
+  b.textContent = m;
+  b.classList.add("acik");
+  clearTimeout(bildirimZaman);
+  bildirimZaman = setTimeout(() => b.classList.remove("acik"), 1800);
+}
+function kopyala(metin) {
+  const yedek = () => {
+    const t = el("textarea");
+    t.value = metin;
+    document.body.appendChild(t);
+    t.select();
+    try { document.execCommand("copy"); bildir("Kod kopyalandı: " + metin); }
+    catch (e) { bildir(metin); }
+    t.remove();
+  };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(metin).then(() => bildir("Kod kopyalandı: " + metin), yedek);
+  } else {
+    yedek();
+  }
+}
+
+document.title = KATALOG.baslik || "Ürün Kataloğu";
+$("baslik").textContent = KATALOG.baslik || "Ürün Kataloğu";
+if (KATALOG.altBaslik) { $("altBaslik").textContent = KATALOG.altBaslik; $("altBaslik").hidden = false; }
+$("altbilgi").textContent = KATALOG.guncelleme ? "Son güncelleme: " + tarihYaz(KATALOG.guncelleme) : "";
+$("ara").addEventListener("input", e => { durum.metin = e.target.value; ciz(); });
+cipleriKur();
+ciz();
+</script>
+</body>
+</html>
